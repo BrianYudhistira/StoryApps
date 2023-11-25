@@ -4,13 +4,19 @@
     <group android:menuCategory="container">
         <item
             android:id="@+id/add"
-            android:title="@string/addstory"
             android:icon="@drawable/add"
+            android:title="@string/addstory"
             app:showAsAction="always" />
         <item
+            android:id="@+id/maps"
+            android:icon="@drawable/add"
+            android:title="@string/maps"
+            app:showAsAction="never" />
+
+        <item
             android:id="@+id/logout"
-            android:title="@string/logout"
             android:icon="@drawable/logout"
-            app:showAsAction="always"/>
+            android:title="@string/logout"
+            app:showAsAction="never" />
     </group>
 </menu>

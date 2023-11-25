@@ -1,8 +1,8 @@
 package com.example.storyapps.di
 
+import StoryRepository
 import android.content.Context
 import com.example.storyapps.api.config.ApiConfig
-import com.example.storyapps.data.Repository.StoryRepository
 import com.example.storyapps.data.Repository.UserRepository
 import com.example.storyapps.data.pref.UserPreference
 import com.example.storyapps.data.pref.dataStore
@@ -18,6 +18,6 @@ object Injection {
         val pref = UserPreference.getInstance(context.dataStore)
         val user = runBlocking { pref.getSession().first() }
         val apiService = ApiConfig.getApiService(user.token)
-        return StoryRepository(apiService)
+        return StoryRepository()
     }
 }

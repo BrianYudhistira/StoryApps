@@ -1,26 +1,29 @@
 package com.example.storyapps.view.main
 
+import StoryRepository
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapps.R
-import com.example.storyapps.view.viewModel.ViewModelFactory
 import com.example.storyapps.api.ListStoryItem
 import com.example.storyapps.api.config.ApiConfig
-import com.example.storyapps.data.Repository.StoryRepository
 import com.example.storyapps.databinding.ActivityMainBinding
 import com.example.storyapps.view.detail.DetailActivity
+import com.example.storyapps.view.maps.MapsActivity
 import com.example.storyapps.view.upload.UploadActivity
+import com.example.storyapps.view.viewModel.ViewModelFactory
 import com.example.storyapps.view.welcome.WelcomeActivity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: MainAdapter
     var token: String = ""
     private val apiService = ApiConfig.getApiService(token)
-    private val storyRepository = StoryRepository(apiService)
+    private val storyRepository = StoryRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +55,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.add -> {
                     val intent = Intent(this@MainActivity,UploadActivity::class.java)
                         intent.putExtra("token", token)
+                    startActivity(intent)
+                    true
+                }
+
+                R.id.maps -> {
+                    val intent = Intent(this@MainActivity, MapsActivity::class.java)
+                    intent.putExtra("token", token)
                     startActivity(intent)
                     true
                 }
@@ -95,27 +105,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateStoryList(storyList: List<ListStoryItem>) {
-        adapter.submitList(storyList)
+    private fun updateStoryList(storyList: PagingData<ListStoryItem>) {
+        // Menggunakan adapter.submitData untuk PagingDataAdapter
+        lifecycleScope.launch {
+            adapter.submitData(storyList)
+        }
     }
+
 
     private fun getStories() {
         viewModel.getSession().observe(this) { user ->
             if (user.isLogin) {
                 token = user.token
 
-                viewModel.viewModelScope.launch {
-                    try {
-                        storyRepository.getStories(
-                            token!!,
-                            onSuccess = { storyList ->
-                                updateStoryList(storyList)
-                            },
-                            onError = {
-                            }
-                        )
-                    } catch (e: Exception) {
-                        Log.d("Error", e.message.toString())
+                // Buat aliran PagingData<ListStoryItem> menggunakan getStories dari StoryRepository
+                val storiesFlow: Flow<PagingData<ListStoryItem>> = storyRepository.getStories(token!!)
+
+                // Observe aliran PagingData menggunakan lifecycleScope
+                lifecycleScope.launch {
+                    storiesFlow.collectLatest { pagingData ->
+                        // Update UI atau lakukan operasi lainnya dengan data yang dimuat
+                        updateStoryList(pagingData)
                     }
                 }
             }

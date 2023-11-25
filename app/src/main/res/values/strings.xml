@@ -13,10 +13,12 @@
     <string name="message_main_page">Selamat Datang di StoryApps Dicoding.</string>
     <string name="logout">Keluar</string>
     <string name="description">Deskripsi</string>
-    <string name="addstory">addstory</string>
+    <string name="addstory">AddStory</string>
+    <string name="maps">Maps</string>
     <string name="camera">Camera</string>
     <string name="galery">Galery</string>
     <string name="upload">Upload</string>
     <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
 

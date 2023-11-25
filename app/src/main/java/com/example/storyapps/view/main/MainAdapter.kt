@@ -2,14 +2,17 @@ package com.example.storyapps.view.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.storyapps.api.ListStoryItem
 import com.example.storyapps.databinding.ListItemBinding
 
-class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.StoryViewHolder>(DiffCallback) {
+
+class MainAdapter :
+    PagingDataAdapter<ListStoryItem, MainAdapter.StoryViewHolder>(DiffCallback) {
+
     private var onItemClickCallback: OnItemClickCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
@@ -19,7 +22,9 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.StoryViewHolder>(Diff
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val currentStory = getItem(position)
-        holder.bind(currentStory)
+        if (currentStory != null) {
+            holder.bind(currentStory)
+        }
     }
 
     fun setStoryClickListener(listener: OnItemClickCallback) {
@@ -33,7 +38,7 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.StoryViewHolder>(Diff
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onItemClickCallback?.onStoryClick(getItem(position))
+                    getItem(position)?.let { it1 -> onItemClickCallback?.onStoryClick(it1) }
                 }
             }
         }
@@ -62,7 +67,6 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.StoryViewHolder>(Diff
             }
         }
     }
-
 }
     interface OnItemClickCallback {
         fun onStoryClick(story: ListStoryItem)

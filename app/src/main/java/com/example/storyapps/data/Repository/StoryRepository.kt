@@ -1,37 +1,29 @@
-package com.example.storyapps.data.Repository
-
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.storyapps.api.ListStoryItem
 import com.example.storyapps.api.Story
 import com.example.storyapps.api.config.ApiConfig
-import com.example.storyapps.api.config.ApiService
+import kotlinx.coroutines.flow.Flow
 
-class StoryRepository(private val apiService: ApiService) {
-    suspend fun getStories(token: String, onSuccess: (List<ListStoryItem>) -> Unit, onError: (String) -> Unit) {
-        try {
-            val response = ApiConfig.getApiService(token).getAllStory()
-            if (response.error) {
-                onError(response.message)
-            } else {
-                onSuccess(response.listStory)
-            }
-        } catch (e: Exception) {
-            onError(e.message ?: "Unknown error")
-        }
+class StoryRepository() {
+
+    fun getStories(token: String): Flow<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { StoryPagingSource(token) }
+        ).flow
     }
-    suspend fun getDetail(token:String, id: String): Story {
+
+    suspend fun getDetail(token: String, id: String): Story {
         val response = ApiConfig.getApiService(token).getDetailStory(id)
         if (response.error) {
             throw Exception(response.message)
         }
         return response.story
     }
-    companion object {
-        @Volatile
-        private var instance: StoryRepository? = null
 
-        fun getInstance(apiService: ApiService): StoryRepository =
-            instance ?: synchronized(this) {
-                instance ?: StoryRepository(apiService).also { instance = it }
-            }
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }

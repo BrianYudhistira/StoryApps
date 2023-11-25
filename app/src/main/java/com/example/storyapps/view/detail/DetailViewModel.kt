@@ -1,12 +1,12 @@
 package com.example.storyapps.view.detail
 
+import StoryRepository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.storyapps.api.Story
-import com.example.storyapps.data.Repository.StoryRepository
 import kotlinx.coroutines.launch
 
 

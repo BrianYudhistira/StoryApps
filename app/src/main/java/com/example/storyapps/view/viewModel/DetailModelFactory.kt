@@ -1,9 +1,9 @@
 package com.example.storyapps.view.viewModel
 
+import StoryRepository
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.storyapps.data.Repository.StoryRepository
 import com.example.storyapps.di.Injection
 import com.example.storyapps.view.detail.DetailViewModel
 

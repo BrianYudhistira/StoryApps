@@ -8,6 +8,7 @@ import com.example.storyapps.api.RegisterResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
@@ -28,8 +29,8 @@ interface ApiService {
 
     @GET("stories")
     suspend fun getAllStory(
-//        @Query("page") page: Int,
-//        @Query("size") size: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
     ): GetAllStoryResponse
 
     @GET("stories/{id}")
@@ -44,4 +45,8 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ): AddStoryResponse
 
+    @GET("stories")
+    suspend fun getMaps(
+        @Query("location") location: Int = 1,
+    ): Response<GetAllStoryResponse>
 }
