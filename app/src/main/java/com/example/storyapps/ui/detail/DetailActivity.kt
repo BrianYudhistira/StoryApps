@@ -1,4 +1,4 @@
-package com.example.storyapps.view.detail
+package com.example.storyapps.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.example.storyapps.databinding.ActivityDetailBinding
-import com.example.storyapps.view.viewModel.DetailModelFactory
+import com.example.storyapps.ui.viewModel.DetailModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -24,7 +24,7 @@ class DetailActivity : AppCompatActivity() {
         val token = intent.getStringExtra("token").toString()
         val id = intent.getStringExtra("id").toString()
 
-        Log.d("token", token.toString())
+        Log.d("token", token)
         Log.d("id", id)
 
         viewModel.getStoryDetail(token, id)

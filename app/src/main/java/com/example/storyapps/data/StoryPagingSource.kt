@@ -1,4 +1,5 @@
-import android.util.Log
+package com.example.storyapps.data
+
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.storyapps.api.ListStoryItem
@@ -21,7 +22,6 @@ class StoryPagingSource(private val token: String) : PagingSource<Int, ListStory
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         return try {
             val page = params.key ?: INITIAL_PAGE_INDEX
-            Log.d("StoryPagingSource", "Loading page $page")
             val responseData = ApiConfig.getApiService(token).getAllStory(page, params.loadSize).listStory
             LoadResult.Page(
                 data = responseData,
@@ -29,7 +29,6 @@ class StoryPagingSource(private val token: String) : PagingSource<Int, ListStory
                 nextKey = if (responseData.isEmpty()) null else page + 1
             )
         } catch (exception: Exception) {
-            Log.e("StoryPagingSource", "Error loading page", exception)
             return LoadResult.Error(exception)
         }
     }

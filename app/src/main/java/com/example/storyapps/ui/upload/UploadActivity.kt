@@ -1,8 +1,11 @@
-package com.example.storyapps.view.upload
+package com.example.storyapps.ui.upload
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,7 +20,7 @@ import com.example.storyapps.R
 import com.example.storyapps.api.AddStoryResponse
 import com.example.storyapps.api.config.ApiConfig
 import com.example.storyapps.databinding.ActivityUploadBinding
-import com.example.storyapps.view.main.MainActivity
+import com.example.storyapps.ui.main.MainActivity
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -30,6 +33,7 @@ class UploadActivity : AppCompatActivity() {
     var token: String = ""
 
     private lateinit var binding: ActivityUploadBinding
+    private lateinit var locationManager: LocationManager
 
     private var currentImageUri: Uri? = null
 
@@ -54,6 +58,8 @@ class UploadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityUploadBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         if (!allPermissionsGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
@@ -101,11 +107,15 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
+
+    @SuppressLint("MissingPermission")
     private fun uploadImage() {
         currentImageUri?.let { uri ->
             val imageFile = uriToFile(uri, this).reduceFileImage()
             Log.d("Image File", "showImage: ${imageFile.path}")
             val description = binding.description.text.toString()
+            var lon = 0F
+            var lat = 0F
 
             showLoading(true)
 
@@ -118,13 +128,22 @@ class UploadActivity : AppCompatActivity() {
             )
             lifecycleScope.launch {
                 try {
+                    val checkBox = binding.location
                     val apiService = ApiConfig.getApiService(token)
-                    val successResponse = apiService.uploadStory(requestBody, multipartBody)
+                    if (checkBox.isChecked){
+                        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        if (location != null) {
+                            lat = location.latitude.toFloat()
+                            lon = location.longitude.toFloat()
+                        }
+                    }
+                    val successResponse = apiService.uploadStory(requestBody, multipartBody,lat, lon)
                     showToast(successResponse.message)
                     showLoading(false)
                     val intent = Intent(this@UploadActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
+                    Log.d("Location","$lat $lon")
                 } catch (e: HttpException) {
                     val errorBody = e.response()?.errorBody()?.string()
                     val errorResponse = Gson().fromJson(errorBody, AddStoryResponse::class.java)

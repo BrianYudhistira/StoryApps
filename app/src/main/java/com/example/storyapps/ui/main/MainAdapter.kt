@@ -1,4 +1,4 @@
-package com.example.storyapps.view.main
+package com.example.storyapps.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -53,7 +53,7 @@ class MainAdapter :
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<ListStoryItem>() {
+        val DiffCallback = object : DiffUtil.ItemCallback<ListStoryItem>() {
             override fun areItemsTheSame(
                 oldItem: ListStoryItem, newItem: ListStoryItem
             ): Boolean {

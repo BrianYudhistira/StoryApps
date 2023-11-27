@@ -1,8 +1,8 @@
-package com.example.storyapps.view.login
+package com.example.storyapps.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.storyapps.data.Repository.UserRepository
+import com.example.storyapps.data.repository.UserRepository
 import com.example.storyapps.data.pref.UserModel
 import kotlinx.coroutines.launch
 

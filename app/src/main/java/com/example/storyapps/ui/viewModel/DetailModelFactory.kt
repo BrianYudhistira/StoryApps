@@ -1,11 +1,11 @@
-package com.example.storyapps.view.viewModel
+package com.example.storyapps.ui.viewModel
 
-import StoryRepository
+import com.example.storyapps.data.repository.StoryRepository
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapps.di.Injection
-import com.example.storyapps.view.detail.DetailViewModel
+import com.example.storyapps.ui.detail.DetailViewModel
 
 class DetailModelFactory(private val storyRepository: StoryRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

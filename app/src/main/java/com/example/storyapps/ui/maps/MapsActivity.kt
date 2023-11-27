@@ -1,4 +1,4 @@
-package com.example.storyapps.view.maps
+package com.example.storyapps.ui.maps
 
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.storyapps.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -53,12 +55,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         GlobalScope.launch(Dispatchers.Main) {
             val response = getMaps()
-            if (response != null && response.isSuccessful) {
+            if (response.isSuccessful) {
                 val body = response.body()
                 val listStory = body?.listStory ?: emptyList()
 
                 listStory.forEach { story ->
-                    val latLng = LatLng(story!!.lat ?: 0.0, story.lon ?: 0.0)
+                    val latLng = LatLng(story.lat ?: 0.0, story.lon ?: 0.0)
                     val snippetText = story.description?.let { description ->
                         val words = description.split(" ")
                         words.take(10).joinToString(" ")
@@ -82,7 +84,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private suspend fun getMaps(): Response<GetAllStoryResponse>? {
+    private suspend fun getMaps(): Response<GetAllStoryResponse> {
         val token = intent.getStringExtra("token").toString()
         val apiService = ApiConfig.getApiService(token)
         return apiService.getMaps()

@@ -1,4 +1,4 @@
-package com.example.storyapps.data.Repository
+package com.example.storyapps.data.repository
 
 import com.example.storyapps.data.pref.UserModel
 import com.example.storyapps.data.pref.UserPreference

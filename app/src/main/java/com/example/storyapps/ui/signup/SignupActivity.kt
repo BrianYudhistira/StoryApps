@@ -1,4 +1,4 @@
-package com.example.storyapps.view.signup
+package com.example.storyapps.ui.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.storyapps.api.config.ApiConfig
 import com.example.storyapps.databinding.ActivitySignupBinding
-import com.example.storyapps.view.login.LoginActivity
+import com.example.storyapps.ui.login.LoginActivity
 
 import kotlinx.coroutines.launch
 

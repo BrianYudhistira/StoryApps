@@ -1,4 +1,4 @@
-package com.example.storyapps.view.login
+package com.example.storyapps.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -12,12 +12,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import com.example.storyapps.view.viewModel.ViewModelFactory
+import com.example.storyapps.ui.viewModel.ViewModelFactory
 import com.example.storyapps.api.LoginResponse
 import com.example.storyapps.api.config.ApiConfig
 import com.example.storyapps.data.pref.UserModel
 import com.example.storyapps.databinding.ActivityLoginBinding
-import com.example.storyapps.view.main.MainActivity
+import com.example.storyapps.ui.main.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,9 +70,9 @@ class LoginActivity : AppCompatActivity() {
                                 showloading(false)
                                 viewModel.saveSession(
                                     UserModel(
-                                        responsebody.loginResult.userId.toString(),
-                                        responsebody.loginResult.name.toString(),
-                                        responsebody.loginResult.token.toString()
+                                        responsebody.loginResult?.userId.toString(),
+                                        responsebody.loginResult?.name.toString(),
+                                        responsebody.loginResult?.token.toString()
                                     )
                                 )
                                 AlertDialog.Builder(this@LoginActivity).apply {

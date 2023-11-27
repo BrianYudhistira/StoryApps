@@ -42,7 +42,9 @@ interface ApiService {
     @POST("stories")
     suspend fun uploadStory(
         @Part("description") description: RequestBody,
-        @Part file: MultipartBody.Part
+        @Part file: MultipartBody.Part,
+        @Part("lat") lat: Float,
+        @Part("lon") lon: Float
     ): AddStoryResponse
 
     @GET("stories")

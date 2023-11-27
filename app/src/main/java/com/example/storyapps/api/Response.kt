@@ -20,7 +20,7 @@ data class DetailStoryResponse(
 	val message: String,
 
 	@field:SerializedName("story")
-	val story: Story
+	val story: Story?
 )
 
 data class Story(
@@ -86,7 +86,7 @@ data class ListStoryItem(
 data class LoginResponse(
 
 	@field:SerializedName("loginResult")
-	val loginResult: LoginResult,
+	val loginResult: LoginResult?,
 
 	@field:SerializedName("error")
 	val error: Boolean,

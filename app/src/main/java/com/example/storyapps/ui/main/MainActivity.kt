@@ -1,6 +1,6 @@
-package com.example.storyapps.view.main
+package com.example.storyapps.ui.main
 
-import StoryRepository
+import com.example.storyapps.data.repository.StoryRepository
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,15 +15,13 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapps.R
 import com.example.storyapps.api.ListStoryItem
-import com.example.storyapps.api.config.ApiConfig
 import com.example.storyapps.databinding.ActivityMainBinding
-import com.example.storyapps.view.detail.DetailActivity
-import com.example.storyapps.view.maps.MapsActivity
-import com.example.storyapps.view.upload.UploadActivity
-import com.example.storyapps.view.viewModel.ViewModelFactory
-import com.example.storyapps.view.welcome.WelcomeActivity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import com.example.storyapps.ui.detail.DetailActivity
+import com.example.storyapps.ui.detail.DetailViewModel
+import com.example.storyapps.ui.maps.MapsActivity
+import com.example.storyapps.ui.upload.UploadActivity
+import com.example.storyapps.ui.viewModel.ViewModelFactory
+import com.example.storyapps.ui.welcome.WelcomeActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -33,8 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MainAdapter
     var token: String = ""
-    private val apiService = ApiConfig.getApiService(token)
-    private val storyRepository = StoryRepository()
+    private val det = DetailViewModel(StoryRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +103,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateStoryList(storyList: PagingData<ListStoryItem>) {
-        // Menggunakan adapter.submitData untuk PagingDataAdapter
         lifecycleScope.launch {
             adapter.submitData(storyList)
         }
@@ -118,15 +114,9 @@ class MainActivity : AppCompatActivity() {
             if (user.isLogin) {
                 token = user.token
 
-                // Buat aliran PagingData<ListStoryItem> menggunakan getStories dari StoryRepository
-                val storiesFlow: Flow<PagingData<ListStoryItem>> = storyRepository.getStories(token!!)
-
-                // Observe aliran PagingData menggunakan lifecycleScope
-                lifecycleScope.launch {
-                    storiesFlow.collectLatest { pagingData ->
-                        // Update UI atau lakukan operasi lainnya dengan data yang dimuat
-                        updateStoryList(pagingData)
-                    }
+                det.getAllStory(token).observe(this@MainActivity) { pagingData ->
+                    updateStoryList(pagingData)
+                    showLoading(false)
                 }
             }
         }

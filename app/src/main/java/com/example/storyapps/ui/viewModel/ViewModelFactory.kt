@@ -1,12 +1,12 @@
-package com.example.storyapps.view.viewModel
+package com.example.storyapps.ui.viewModel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.storyapps.data.Repository.UserRepository
+import com.example.storyapps.data.repository.UserRepository
 import com.example.storyapps.di.Injection
-import com.example.storyapps.view.login.LoginViewModel
-import com.example.storyapps.view.main.MainViewModel
+import com.example.storyapps.ui.login.LoginViewModel
+import com.example.storyapps.ui.main.MainViewModel
 
 class ViewModelFactory(private val repository: UserRepository) : ViewModelProvider.NewInstanceFactory() {
 

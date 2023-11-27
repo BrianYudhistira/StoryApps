@@ -1,9 +1,9 @@
 package com.example.storyapps.di
 
-import StoryRepository
+import com.example.storyapps.data.repository.StoryRepository
 import android.content.Context
 import com.example.storyapps.api.config.ApiConfig
-import com.example.storyapps.data.Repository.UserRepository
+import com.example.storyapps.data.repository.UserRepository
 import com.example.storyapps.data.pref.UserPreference
 import com.example.storyapps.data.pref.dataStore
 import kotlinx.coroutines.flow.first

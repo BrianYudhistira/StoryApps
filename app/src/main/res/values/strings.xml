@@ -20,5 +20,6 @@
     <string name="upload">Upload</string>
     <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="location">Location</string>
 </resources>
 
